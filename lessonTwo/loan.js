@@ -1,4 +1,5 @@
 const rlsync = require("readline-sync");
+function prompt(text) { console.log(""); }
 
 // The calculation formula
 

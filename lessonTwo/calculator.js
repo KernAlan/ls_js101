@@ -1,30 +1,32 @@
 const rlSync = require('readline-sync');
-console.log('Welcome to Calculator!');
-
-function prompt(message) {
-  console.log(`=> ${message}`);
-}
+const prompt = message => console.log(`=> ${message}`);
+const MESSAGES = require('./calculator_messages.json');
 
 function invalidNumber(number) {
   return number.trimStart() === '' || Number.isNaN(Number(number));
 }
 
-function calculator() {
-  let number1 = rlSync.question(prompt("What's the first number?\n"));
+prompt(MESSAGES['welcome']);
+
+while(true) {
+  prompt(`What's the first number?`);
+  let number1 = rlSync.question();
   while (invalidNumber(number1)) {
-    prompt("Hmm... that doesn't look like a valid number.");
+    prompt(MESSAGES['invalidNo']);
     number1 = rlSync.question();
   }
-
-  let number2 = rlSync.question(prompt("What's the second number?\n"));
+  
+  prompt("What's the second number?");
+  let number2 = rlSync.question();
   while (invalidNumber(number2)) {
-    prompt("Hmm... that doesn't look like a valid number.");
+    prompt(MESSAGES['invalidNo']);
     number2 = rlSync.question();
   }
-
-  let operation = rlSync.question(prompt("What operation would you like to perform?\n1) Add 2) Subtract 3) Multiply 4) Divide"));
+  
+  prompt(MESSAGES['operation']);
+  let operation = rlSync.question();
   while (invalidNumber(operation)) {
-    prompt("Hmm... that doesn't look like a valid number.");
+    prompt(MESSAGES['invalidOp']);
     operation = rlSync.question();
   }
 
@@ -38,11 +40,17 @@ function calculator() {
   } else if (operation === '4') {
     result = parseInt(number1, 10) / parseInt(number2, 10);
   } else {
-    prompt('Hmm, something went wrong. Try again.');
-    calculator();
+    prompt(MESSAGES['operation']);
+    operation = rlSync.question();
   }
 
-  console.log(prompt(`The result is: ${result}`));
+  prompt(`The result is: ${result}\n`);
+  
+  prompt(MESSAGES['restart']);
+  let restartCalculator = rlSync.question().toLowerCase();
+  while (restartCalculator !== 'y' && restartCalculator !== 'n') {
+    prompt(MESSAGES['invalidOp']);
+    restartCalculator = rlSync.question();
+  }
+    if (restartCalculator !== 'y') break;
 }
-
-calculator();
