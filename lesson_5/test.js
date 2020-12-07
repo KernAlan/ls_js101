@@ -1,14 +1,13 @@
-function evenValues(array) {
-  let evens = [];
+let array = [
+  [1, 2, 3],
+  [5, 6, 7],
+  [4, 8, 9]
+  ]
 
-  array.forEach(value => {
-    if (value % 2 === 0) {
-      evens.push(value);
-    }
-    array.shift();
-  });
-
-  return evens;
+for (let i = 0; i < array.length; i++) {
+  if (array[i].includes(4)) {
+    console.log('yes')
+  } else {
+    console.log('no')
+  }
 }
-
-console.log(evenValues([1, 3, 4, 2, 4, 6, 5, 7, 9, 10, 12]));
