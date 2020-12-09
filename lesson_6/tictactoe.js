@@ -28,9 +28,14 @@ let playerChoice;
 
 let computerChoices = [];
 let computerChoice;
+
+let winner = 'none';
+let computer;
+let player;
             
             
 function displayBoard() {
+  console.clear();
   console.log(frontBoard[0]);
   console.log(frontBoard[1]);
   console.log(frontBoard[2]);
@@ -54,6 +59,16 @@ function everyMatch (array, target) {
   }
 }
 
+function resetBoard() {
+  frontBoard = [['1', '2', '3'],
+            ['4', '5', '6'],
+            ['7', '8', '9']];
+}
+
+function resetScores(person) {
+  person.length = 0;
+}
+
 let winningCombinations = [
   ['1', '2', '3'],
   ['1', '5', '9'],
@@ -71,96 +86,116 @@ displayBoard();
 
 // Ask the user to mark a square.
 
-let noWinner = true;
+let playAgain = true;
 
-while (noWinner === true) {
+while (playAgain === true) {
 
-  let loop = true;
+  let noWinner = true;
   
-  while (loop) {
-    playerChoice = rlsync.question("Which tile would you like to mark? (Enter number): ");
-    
-    if (playerChoices.includes(playerChoice) || computerChoices.includes(playerChoice)) {
-      prompt(`That tile has already been marked! Please choose again`);
-    } else {
-      loop = false;
-    }
-  }
-
-    playerChoices.push(playerChoice);
-    
-    for (let i = 0; i < frontBoard.length; i++) {
-      if (frontBoard[i].includes(playerChoice)) {
-        let index = frontBoard[i].indexOf(playerChoice);
-        frontBoard[i][index] = 'X';
-      }
-    }
-    prompt(`Player choices: ${playerChoices}`);
-    
-    if (inputBoard.includes(playerChoice)) {
-      loop = false;
-    } else {
-        prompt("Please enter a valid number.");
-    }
-
-// Computer marks a square.
+  while (noWinner === true) {
   
-  while (true) {
-    computerChoice = randomGenerator(1, 9);
-    if (computerChoices.includes(computerChoice) || playerChoices.includes(computerChoice)) {
-      computerChoice = randomGenerator(1, 9);
+    let loop = true;
+    
+    while (loop) {
+      
+      playerChoice = rlsync.question("Which tile would you like to mark? (Enter number): ");
+      
+      if (playerChoices.includes(playerChoice) || computerChoices.includes(playerChoice)) {
+        prompt(`That tile has already been marked! Please choose again`);
       } else {
-        break;
+        loop = false;
       }
     }
-    
-  computerChoices.push(computerChoice);
   
-  for (let i = 0; i < frontBoard.length; i++) {
-    if (frontBoard[i].includes(computerChoice)) {
-          let index = frontBoard[i].indexOf(computerChoice);
-          frontBoard[i][index] = 'O';
-          prompt(`Computer chooses ${computerChoice}.`);
+      playerChoices.push(playerChoice);
+      
+      for (let i = 0; i < frontBoard.length; i++) {
+        if (frontBoard[i].includes(playerChoice)) {
+          let index = frontBoard[i].indexOf(playerChoice);
+          frontBoard[i][index] = 'X';
         }
       }
-      prompt(`Computer choices: ${computerChoices}`);
+      
+      if (inputBoard.includes(playerChoice)) {
+        loop = false;
+      } else {
+          prompt("Please enter a valid number.");
+      }
   
-  // Display the updated board state.
+  // Computer marks a square.
+    
+    while (true) {
+      computerChoice = randomGenerator(1, 9);
+      if (computerChoices.length + playerChoices.length >= 9) {
+        noWinner = false;
+        break;
+        } else if (computerChoices.includes(computerChoice) || playerChoices.includes(computerChoice)) {
+          computerChoice = randomGenerator(1, 9);
+        } else break;
+      }
+      
+    if (noWinner === true) {
+      computerChoices.push(computerChoice);
+    }
+    
+    for (let i = 0; i < frontBoard.length; i++) {
+      if (frontBoard[i].includes(computerChoice)) {
+            let index = frontBoard[i].indexOf(computerChoice);
+            frontBoard[i][index] = 'O';
+          }
+        }
+    
+    // Display the updated board state.
+    
+    displayBoard();
   
-  displayBoard();
-
-// If it's a winning board, display the winner.
-
-  let winner;
-  let player;
-  let computer;
+  // If it's a winning board, display the winner.
+    
+    if (everyMatch(computerChoices, winningCombinations)) {
+      winner = computer;
+      prompt(`The computer wins!`);
+      noWinner = false;
+    }
+    
+    if (everyMatch(playerChoices, winningCombinations)) {
+      winner = player;
+      prompt(`The player wins!`);
+      noWinner = false;
+    }
   
-  if (everyMatch(computerChoices, winningCombinations)) {
-    prompt(`The computer wins!`);
-    noWinner = false;
+  // If the board is full, display tie.
+  
+    if ((computerChoices.length + playerChoices.length >= 9) && (winner !== computer || player)) {
+      prompt(`Tie game!`);
+      noWinner = false;
+    }
+  
+  // If neither player won and the board is not full, go to #2
+  
   }
   
-  if (everyMatch(playerChoices, winningCombinations)) {
-    prompt(`The player wins!`);
-    noWinner = false;
+  // If yes, go to #1
+  
+  prompt(`Game over!`);
+  
+  while(true) {
+    let gameOver = rlsync.question(`Would you like to play again? Enter 'y' or 'n': `).toString().toLowerCase();
+    if ((gameOver !== 'y' && !'n') || (gameOver !== 'n' && !'y')) {
+      prompt(`Please enter 'y' or 'n'!`);
+    } else if (gameOver === 'y') {
+        resetBoard();
+        resetScores(computerChoices);
+        resetScores(playerChoices);
+        noWinner = true;
+        displayBoard();
+        break;
+    } else { 
+        playAgain = false;
+        prompt(`Thanks for playing! See you next time.`);
+        break;
+    }
   }
-
-// If the board is full, display tie.
-
-  if (computerChoices.length + playerChoices.length > 8) {
-    prompt(`Tie game!`);
-    noWinner = false;
-  }
-
-// If neither player won and the board is not full, go to #2
 
 }
-
-// If yes, go to #1
-
-displayBoard();
-prompt(`Game over!`)
-
-let gameOver = rlsync.question(`Would you like to play again? Enter 'y' or 'n'.`);
 
 // Goodbye!
