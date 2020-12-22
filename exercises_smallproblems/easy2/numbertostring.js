@@ -1,14 +1,5 @@
-/*
-Write a function that converts a non-negative integer value (e.g., 0, 1, 2, 3, and so on) to the string representation of that integer
 
-Algorithm:
-  Create an object that has key-value pairs with each number corresponding to its string equivalent
-  Break up the integer to its individual digits in an array
-  Map each element in the array to a new array by running it through the object
-  Join the new string array
-  Return the string array
-  
-*/
+// Write a function that converts a non-negative integer value (e.g., 0, 1, 2, 3, and so on) to the string representation of that integer
 
 
 function integerToString(int) {
