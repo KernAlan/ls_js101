@@ -79,8 +79,8 @@ function resetChoices(person) {
   person.length = 0;
 }
 
+
 function restartGame() {
-        
   while (true) {
     
     let gameOver = rlsPrompt(`Would you like to play again? Enter 'y' or 'n': `).toString().toLowerCase().trim();
