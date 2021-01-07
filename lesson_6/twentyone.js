@@ -10,29 +10,108 @@
 6. If dealer busts, player wins.
 7. Compare cards and declare winner.
 
+TO DO 1/4/2021:
+ - Calculate aces
+ - Fix play again
+
 */
 
-function randomGenerator(min, max) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random * (max - min) + min)
+let rlsync = require("readline-sync");
+
+function deal() {
+  playerHand.push(deck[0], deck[1]);
+  deck.splice(0, 2);
+  
+  dealerHand.push(deck[0], deck[1]);
+  deck.splice(0, 2);
 }
 
-
-function hit(player) {
+function hit(hand) {
+  let card = deck.splice(0, 1);
+  hand.push(card[0]);
   
+  if (hand === playerHand) {
+    console.log(`The player has hit, and has drawn one ${card[0][1]}.`);
+  }
+  
+  if (hand === dealerHand) {
+    console.log(`The dealer has hit, and has drawn one ${card[0][1]}.`);
+  }
 }
 
-function determineBust(player) {
+function total(hand) {
+  let sum = 0;
   
+  for (let i = 0; i < hand.length; i++) {
+    sum += hand[i][0];
+  }
+  
+  hand.filter(value => value[0] === 11).forEach(function() {
+    if (sum > 21) sum -= 10;
+  });
+  
+  return sum;
 }
 
-function resetDeck() {
-  
+function busted(hand) {
+  if (total(hand) > 21) return true;
 }
 
-function playRound() {
+function resetCards() {
+  deck.length = 0;
+  deck = [
+    [11, 'A'], [11, 'A'], [11, 'A'], [11, 'A'], 
+    [2, '2'], [2, '2'], [2, '2'], [2, '2'], 
+    [3, '3'], [3, '3'], [3, '3'], [3, '3'],
+    [4, '4'], [4, '4'], [4, '4'], [4, '4'], 
+    [5, '5'], [5, '5'], [5, '5'], [5, '5'], 
+    [6, '6'], [6, '6'], [6, '6'], [6, '6'],
+    [7, '7'], [7, '7'], [7, '7'], [7, '7'], 
+    [8, '8'], [8, '8'], [8, '8'], [8, '8'], 
+    [9, '9'], [9, '9'], [9, '9'], [9, '9'],
+    [10, '10'], [10, '10'], [10, '10'], [10, '10'],
+    [10, 'J'], [10, 'J'], [10, 'J'], [10, 'J'], 
+    [10, 'Q'], [10, 'Q'], [10, 'Q'], [10, 'Q'],
+    [10, 'K'], [10, 'K'], [10, 'K'], [10, 'K']
+  ];
   
+  playerHand.length = 0;
+  dealerHand.length = 0;
+}
+
+function shuffle(array) {
+  for (let index = array.length - 1; index > 0; index--) {
+    let otherIndex = Math.floor(Math.random() * (index + 1));
+    [array[index], array[otherIndex]] = [array[otherIndex], array[index]];
+  }
+}
+
+function hasWon() {
+  if (busted(playerHand)) return 'dealer';
+  
+  if (busted(dealerHand)) return 'player';
+  
+  if (total(playerHand) > total(dealerHand)) return 'player';
+  
+  if (total(dealerHand) > total(playerHand)) return 'dealer';
+}
+
+function listCards(hand) {
+  let arr = [];
+  for (let i = 0; i < hand.length; i++) {
+    arr.push(hand[i][1]);
+  }
+  return arr.join(", ");
+}
+
+function displayWinner() {
+  if (hasWon() === 'player') {
+    console.log(`The player has won!`);
+  } else if (hasWon() === 'dealer') {
+    console.log(`The dealer has won!`);
+  } else { 
+    console.log(`The game is a draw!`);
+  }
 }
 
 let playerHand = [];
@@ -40,18 +119,81 @@ let playerHand = [];
 let dealerHand = [];
 
 let deck = [
-  [1, 1, 1, 1],
-  [10, 10, 10, 10],
-  [10, 10, 10, 10],
-  [10, 10, 10, 10],
-  [2, 2, 2, 2],
-  [3, 3, 3, 3],
-  [4, 4, 4, 4],
-  [5, 5, 5, 5],
-  [6, 6, 6, 6],
-  [7, 7, 7, 7],
-  [8, 8, 8, 8],
-  [9, 9, 9, 9],
-  [10, 10, 10, 10]
+  [11, 'A'], [11, 'A'], [11, 'A'], [11, 'A'], 
+  [2, '2'], [2, '2'], [2, '2'], [2, '2'], 
+  [3, '3'], [3, '3'], [3, '3'], [3, '3'],
+  [4, '4'], [4, '4'], [4, '4'], [4, '4'], 
+  [5, '5'], [5, '5'], [5, '5'], [5, '5'], 
+  [6, '6'], [6, '6'], [6, '6'], [6, '6'],
+  [7, '7'], [7, '7'], [7, '7'], [7, '7'], 
+  [8, '8'], [8, '8'], [8, '8'], [8, '8'], 
+  [9, '9'], [9, '9'], [9, '9'], [9, '9'],
+  [10, '10'], [10, '10'], [10, '10'], [10, '10'],
+  [10, 'J'], [10, 'J'], [10, 'J'], [10, 'J'], 
+  [10, 'Q'], [10, 'Q'], [10, 'Q'], [10, 'Q'],
+  [10, 'K'], [10, 'K'], [10, 'K'], [10, 'K']
   ];
+  
+// GAMEPLAY
 
+let playAgain = true;
+
+while (playAgain) {
+  
+  shuffle(deck);
+  deal();
+  console.log(`You were dealt a ${playerHand[0][1]} and a ${playerHand[1][1]} for a total of ${total(playerHand)}`);
+  console.log(`You can see the dealer has one ${dealerHand[0][1]}`);
+  
+  // PLAYER TURN
+  
+  while (true) {
+    
+    console.log(`Hit or stay? 'h' for hit or 's' for stay`);
+    let answer = rlsync.question();
+    
+    if (answer === 'h') hit(playerHand);
+    if (answer === 's' || busted(playerHand) === true) break;
+    
+    console.log(`Player's hand is ${total(playerHand)}.`);
+    
+  }
+  
+  // DEALER TURN
+    
+  while (true) {
+    if (total(dealerHand) >= 17) break;
+    
+    if (busted(playerHand)) break;
+    
+    if (busted(dealerHand)) break;
+    
+    if (total(playerHand) > total(dealerHand)) {
+      hit(dealerHand);
+    }
+  }
+  
+  // POST-GAME SCREEN
+  
+  console.log(`The dealer lays down the following hand: ${listCards(dealerHand)}`);
+  console.log(`You lay down your hand: ${listCards(playerHand)}`);
+  
+  displayWinner();
+
+  console.log(`Would you like to play again? 'y' or 'n' `);
+  
+  while(true) {
+    let playOnceMore = rlsync.question();
+  
+    if (playOnceMore === 'y') {
+      resetCards();
+      break;
+    } else if (playOnceMore === 'n') {
+      playAgain = false;
+      break;
+    } else {
+      console.log(`That was an invalid choice! Type again 'y' or 'n' `);
+    }
+  }
+  
+}
