@@ -65,6 +65,8 @@ function total(hand) {
   for (let index = 0; index < hand.length; index++) {
     sum += hand[index][0];
   }
+  
+  // Correct for aces:
 
   hand.filter(value => value[0] === 11).forEach(function() {
     if (sum > 21) sum -= 10;
@@ -152,7 +154,11 @@ while (playAgain) {
 
   shuffle(deck);
   deal();
-  console.log(`You were dealt a ${playerHand[0][1]} and a ${playerHand[1][1]} for a total of ${total(playerHand)}`);
+  
+  let playerTotal = total(playerHand);
+  let dealerTotal = total(dealerHand);
+  
+  console.log(`You were dealt a ${playerHand[0][1]} and a ${playerHand[1][1]} for a total of ${playerTotal}`);
   console.log(`You can see the dealer has one ${dealerHand[0][1]}`);
 
   // PLAYER TURN
@@ -164,21 +170,24 @@ while (playAgain) {
 
     if (answer === 'h') hit(playerHand);
     if (answer === 's' || busted(playerHand) === true) break;
+    
+    playerTotal = total(playerHand);
+    dealerTotal = total(dealerHand);
 
-    console.log(`Player's hand is ${total(playerHand)}.`);
+    console.log(`Player's hand is ${playerTotal}.`);
 
   }
 
   // DEALER TURN
 
   while (true) {
-    if (total(dealerHand) >= 17) break;
+    if (dealerTotal >= 17) break;
 
     if (busted(playerHand)) break;
 
     if (busted(dealerHand)) break;
 
-    if (total(playerHand) > total(dealerHand)) {
+    if (playerTotal > dealerTotal) {
       hit(dealerHand);
     }
   }
