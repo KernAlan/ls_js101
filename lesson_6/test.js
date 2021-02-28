@@ -1,29 +1,7 @@
-let deck = [
-    [11, 'A'], [11, 'A'], [11, 'A'], [11, 'A'], 
-    [2, '2'], [2, '2'], [2, '2'], [2, '2'], 
-    [3, '3'], [3, '3'], [3, '3'], [3, '3'],
-    [4, '4'], [4, '4'], [4, '4'], [4, '4'], 
-    [5, '5'], [5, '5'], [5, '5'], [5, '5'], 
-    [6, '6'], [6, '6'], [6, '6'], [6, '6'],
-    [7, '7'], [7, '7'], [7, '7'], [7, '7'], 
-    [8, '8'], [8, '8'], [8, '8'], [8, '8'], 
-    [9, '9'], [9, '9'], [9, '9'], [9, '9'],
-    [10, '10'], [10, '10'], [10, '10'], [10, '10'],
-    [10, 'J'], [10, 'J'], [10, 'J'], [10, 'J'], 
-    [10, 'Q'], [10, 'Q'], [10, 'Q'], [10, 'Q'],
-    [10, 'K'], [10, 'K'], [10, 'K'], [10, 'K']
-  ];
-  
-function deal() {
-  let playerHand = [];
-  let dealerHand = [];
-  playerHand.push(deck[0], deck[1]);
-  deck.splice(0, 2);
-  
-  dealerHand.push(deck[0], deck[1]);
-  deck.splice(0, 2);
-}
+let string = "I am testing this currently.";
 
-deal();
-console.log(deck.length)
-console.log(deck)
+let testing = "testing";
+
+let newStr = string.replace(testing, "bitching")
+
+console.log(newStr)
