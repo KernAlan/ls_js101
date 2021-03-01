@@ -1,9 +1,12 @@
-// Write a recursive function that computes the nth Fibonacci number, where nth is an argument passed to the function.
+// For this exercise, your objective is to refactor the recursive fibonacci function to use memoization.
 
 function fibonacci(n) {
+  let memo = {};
+  
   if (n < 2) {
     return n;
   } else {
+    memo.n = fibonacci(n - 1);
     return fibonacci(n - 1) + fibonacci(n - 2);
   }
 }
