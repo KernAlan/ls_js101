@@ -13,7 +13,27 @@
 // You may also assume that the arguments are in degrees.
 
 function triangle(angle1, angle2, angle3) {
+  let array = [angle1, angle2, angle3];
   
+  if ((angle1 + angle2 + angle3) !== 180) {
+    console.log('invalid');
+  }
+  
+  if (array.includes(0)) {
+    console.log('invalid');
+  }
+  
+  if (array.includes(90) && !array.includes(0)) {
+    console.log('right');
+  }
+  
+  if ((angle1 < 90 && angle2 < 90 && angle3 < 90) && (angle1 + angle2 + angle3 === 180)) {
+    console.log('acute');
+  }
+  
+  if (angle1 > 90 || angle2 > 90 || angle3 > 90) {
+    console.log('obtuse');
+  }
 }
 
 triangle(60, 70, 50);       // "acute"
